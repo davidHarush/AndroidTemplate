@@ -13,23 +13,9 @@ class MoviesRepo @Inject constructor(
     private val webService: IMoviesApiService
 ) {
 
-//    suspend fun getMovies(): SimpleResponse<Movie.ApiResult> {
-//        return safeApiCall { webService.getPopularMovies() }
-//    }
-
-    val latestNews: Flow<Movies> = flow {
-        val latestNews = webService.getPopularMoviesApi()
-        emit(latestNews)
+   val movies: Flow<Movies> = flow {
+        val movies = webService.getPopularMoviesApi()
+        emit(movies)
     }
-
-
-//    private inline fun <T> safeApiCall(apiCall: () -> Response<T>): SimpleResponse<T> {
-//        return try {
-//            SimpleResponse.success(apiCall.invoke())
-//        } catch (e: Exception) {
-//            SimpleResponse.failure(e)
-//        }
-//    }
-
 
 }

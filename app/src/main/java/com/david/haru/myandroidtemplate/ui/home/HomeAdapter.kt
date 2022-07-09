@@ -14,27 +14,27 @@ import com.david.haru.myandroidtemplate.network.getImageUrl
 
 
 class HomeAdapter(val callback: (MovieItem, ListItemBinding) -> Unit) :
-    ListAdapter<MovieItem, HomeAdapter.NewsViewHolder>(
-        NewsDiffCallback()
+    ListAdapter<MovieItem, HomeAdapter.MovieViewHolder>(
+        MovieDiffCallback()
     ) {
 
     private lateinit var mInflater: LayoutInflater
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): NewsViewHolder {
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieViewHolder {
         if (!::mInflater.isInitialized) {
             mInflater = LayoutInflater.from(parent.context)
         }
 
-        return NewsViewHolder(mInflater.inflate(R.layout.list_item, parent, false))
+        return MovieViewHolder(mInflater.inflate(R.layout.list_item, parent, false))
     }
 
     override fun getItemCount(): Int = currentList.size
 
-    override fun onBindViewHolder(holder: NewsViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.onBind(currentList[position])
     }
 
-    inner class NewsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class MovieViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val binding = ListItemBinding.bind(itemView)
 
         fun onBind(dataMovieItem: MovieItem) = with(binding) {
@@ -52,7 +52,7 @@ class HomeAdapter(val callback: (MovieItem, ListItemBinding) -> Unit) :
 
 }
 
-class NewsDiffCallback : DiffUtil.ItemCallback<MovieItem>() {
+class MovieDiffCallback : DiffUtil.ItemCallback<MovieItem>() {
 
     override fun areItemsTheSame(oldMovieItem: MovieItem, newMovieItem: MovieItem): Boolean {
         return oldMovieItem.hashCode() == newMovieItem.hashCode()

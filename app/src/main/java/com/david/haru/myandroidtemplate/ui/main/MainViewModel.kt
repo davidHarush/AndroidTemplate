@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val newsRepo: MoviesRepo
+    private val movieRepo: MoviesRepo
 ) : ViewModel() {
 
     private var _movies: MutableLiveData<Movies> = MutableLiveData()
@@ -24,7 +24,7 @@ class MainViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            newsRepo.latestNews
+            movieRepo.movies
                 .catch { exception ->
                     _onErr.postValue(exception.message)
                 }

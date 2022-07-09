@@ -1,36 +1,30 @@
 package com.david.haru.myandroidtemplate.ui.main
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.david.haru.myandroidtemplate.network.Movies
-import com.david.haru.myandroidtemplate.repo.MoviesRepo
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import com.david.haru.myandroidtemplate.network.MovieItem
+import com.david.haru.myandroidtemplate.repo.FeedPagingSource
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 
 @HiltViewModel
 class MainViewModel @Inject constructor(
-    private val newsRepo: MoviesRepo
+    private val pagingSource :FeedPagingSource,
 ) : ViewModel() {
 
-    private var _movies: MutableLiveData<Movies> = MutableLiveData()
-    val movies get() = _movies
-
-    private var _onErr: MutableLiveData<String> = MutableLiveData()
-    val onErr get() = _onErr
-
+    private var _feed: Flow<PagingData<MovieItem>>? = null
+    val feed get() = _feed!!
     init {
-        viewModelScope.launch {
-            newsRepo.latestNews
-                .catch { exception ->
-                    _onErr.postValue(exception.message)
-                }
-                .collect { movie ->
-                    _movies.postValue(movie)
-                }
-        }
+        fetchFeed()
+    }
+
+    private fun fetchFeed() {
+        _feed = Pager(PagingConfig(pageSize = 10)) {
+            pagingSource
+        }.flow
     }
 }

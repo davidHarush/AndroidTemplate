@@ -8,11 +8,6 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-/**
- * Created by David Harush
- * On 21/10/2020.
- */
-
 fun ViewModel.runCoroutine(block: suspend CoroutineScope.() -> Unit) {
     viewModelScope.launch {
         block()
@@ -31,4 +26,7 @@ fun <T> T.print(tag: String = "printObj"): T {
     Log.i(tag, toString())
     return this
 }
+
+val Any.classTag: String
+    get() = this::class.java.simpleName
 

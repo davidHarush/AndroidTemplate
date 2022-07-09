@@ -22,6 +22,8 @@ fun <T : Any> Fragment.autoCleared() = AutoClearedValue<T>(this)
 class AutoClearedValue<T : Any>(val fragment: Fragment) : ReadWriteProperty<Fragment, T> {
     private var _value: T? = null
 
+    val v = this::class.java.simpleName
+
     init {
         fragment.lifecycle.addObserver(object : DefaultLifecycleObserver {
             override fun onCreate(owner: LifecycleOwner) {

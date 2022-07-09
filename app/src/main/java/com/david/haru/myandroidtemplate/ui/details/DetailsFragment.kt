@@ -17,7 +17,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class DetailsFragment : Fragment(R.layout.details_fragment) {
 
     private var binding by autoCleared<DetailsFragmentBinding>()
-    val args: DetailsFragmentArgs by navArgs()
+    private val args: DetailsFragmentArgs by navArgs()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

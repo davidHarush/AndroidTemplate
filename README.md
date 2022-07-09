@@ -1,6 +1,6 @@
 # AndroidTemplate
 
-This template provides a starting point for Mvvm Android projects.
+This template provides a starting point for Mvvm Android projects. <br/>
 The app go to theMovieDb api retrieve a list of the most popular movies and shows them
 
 - 100% Kotlin

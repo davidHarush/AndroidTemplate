@@ -34,7 +34,6 @@ class HomeFragment : Fragment() {
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
         sharedElementReturnTransition =
             TransitionInflater.from(requireContext()).inflateTransition(android.R.transition.move)
-
     }
 
     override fun onCreateView(

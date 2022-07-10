@@ -1,7 +1,8 @@
 # AndroidTemplate
 
 This template provides a starting point for Mvvm Android projects. <br/>
-The app go to theMovieDb api retrieve a list of the most popular movies and shows them
+The app go to theMovieDb api, retrieve a list of the most popular movies and display them in recyclerview. <br/>
+In main branch the recyclerview display only one page, but in paging_library branch the app using paging library.
 
 - 100% Kotlin
 - Retrofit2

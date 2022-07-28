@@ -4,9 +4,13 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.FragmentNavigatorExtras
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
@@ -16,8 +20,10 @@ import com.david.haru.myandroidtemplate.databinding.ListItemBinding
 import com.david.haru.myandroidtemplate.network.MovieItem
 import com.david.haru.myandroidtemplate.network.getTransitionName
 import com.david.haru.myandroidtemplate.ui.main.MainViewModel
+import com.david.haru.myandroidtemplate.ui.main.UiState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.view.*
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
@@ -49,30 +55,42 @@ class HomeFragment : Fragment() {
     }
 
     private fun setRecyclerView() {
-        mainViewModel.movies
-            .observe(
-                requireActivity()
-            ) { movies ->
-                viewHome?.recyclerView?.apply {
-                    adapter = HomeAdapter {
-                            data, binding -> onClick(data,binding)
-                    }.apply {
-                        submitList(movies.results)
-                    }
-                    layoutManager = GridLayoutManager(context, 2)
 
+        lifecycleScope.launch {
+            // repeatOnLifecycle launches the block in a new coroutine every time the
+            // lifecycle is in the STARTED state (or above) and cancels it when it's STOPPED.
+            repeatOnLifecycle(Lifecycle.State.STARTED) {
+                // Trigger the flow and start listening for values.
+                // Note that this happens when lifecycle is STARTED and stops
+                // collecting when the lifecycle is STOPPED
+                mainViewModel.uiState.collect { data ->
+                    // New value received
+                    when (data) {
+                        is UiState.Success -> {
+                            if (!data.movies.isEmpty) {
+                                viewHome?.recyclerView?.apply {
+                                    adapter = HomeAdapter { data, binding ->
+                                        onClick(data, binding)
+                                    }.apply {
+                                        submitList(data.movies.results)
+                                    }
+
+                                    layoutManager = GridLayoutManager(context, 2)
+                                }
+                            }
+                        }
+                        is UiState.Error -> {
+                            Toast.makeText(context, data.exception.message, Toast.LENGTH_SHORT)
+                                .show()
+
+                        }
+                    }
                 }
             }
-
-        mainViewModel.onErr
-            .observe(
-                requireActivity()
-            ) {
-
-            }
+        }
     }
 
-    private fun onClick(data: MovieItem, binding: ListItemBinding){
+    private fun onClick(data: MovieItem, binding: ListItemBinding) {
         val transitionName = data.getTransitionName()
         binding.image.transitionName = transitionName + "image"
         binding.title.transitionName = transitionName + "title"

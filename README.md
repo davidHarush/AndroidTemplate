@@ -11,7 +11,7 @@ In main branch the recyclerview display only one page, but in paging_library bra
 - View binding
 - Android Architecture components: 
    - ViewModel
-   - Flow
+   - Flow and StateFlow
    - Navigation component
    - paging library(only in paging library branch)
 

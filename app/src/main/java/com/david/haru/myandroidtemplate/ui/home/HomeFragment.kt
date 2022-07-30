@@ -17,10 +17,12 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.transition.TransitionInflater
 import com.david.haru.myandroidtemplate.R
 import com.david.haru.myandroidtemplate.databinding.ListItemBinding
+import com.david.haru.myandroidtemplate.gone
 import com.david.haru.myandroidtemplate.network.MovieItem
 import com.david.haru.myandroidtemplate.network.getTransitionName
 import com.david.haru.myandroidtemplate.ui.main.MainViewModel
 import com.david.haru.myandroidtemplate.ui.main.UiState
+import com.david.haru.myandroidtemplate.visible
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.main_fragment.view.*
 import kotlinx.coroutines.launch
@@ -67,22 +69,25 @@ class HomeFragment : Fragment() {
                     // New value received
                     when (data) {
                         is UiState.Success -> {
-                            if (!data.movies.isEmpty) {
-                                viewHome?.recyclerView?.apply {
-                                    adapter = HomeAdapter { data, binding ->
-                                        onClick(data, binding)
-                                    }.apply {
-                                        submitList(data.movies.results)
-                                    }
-
-                                    layoutManager = GridLayoutManager(context, 2)
+                            viewHome?.progressBar?.gone()
+                            viewHome?.recyclerView?.apply {
+                                adapter = HomeAdapter { data, binding ->
+                                    onClick(data, binding)
+                                }.apply {
+                                    submitList(data.movies.results)
                                 }
+
+                                layoutManager = GridLayoutManager(context, 2)
                             }
+
                         }
                         is UiState.Error -> {
+                            viewHome?.progressBar?.gone()
                             Toast.makeText(context, data.exception.message, Toast.LENGTH_SHORT)
                                 .show()
-
+                        }
+                        is UiState.Loading -> {
+                            viewHome?.progressBar?.visible()
                         }
                     }
                 }

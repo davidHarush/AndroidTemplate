@@ -9,17 +9,7 @@ data class Movies(
     val results: ArrayList<MovieItem>,
     val total_pages: Int,
     val total_results: Int
-) {
-    constructor() : this( // Empty constructor.
-        page = 0,
-        results = ArrayList<MovieItem>(),
-        total_pages = 0,
-        total_results = 0
-    )
-
-    val isEmpty: Boolean
-        get() = results.isEmpty()
-}
+)
 
 @Parcelize
 data class MovieItem(

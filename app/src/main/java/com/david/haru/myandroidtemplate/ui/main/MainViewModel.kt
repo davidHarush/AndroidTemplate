@@ -18,7 +18,7 @@ class MainViewModel @Inject constructor(
 ) : ViewModel() {
 
     // Backing property to avoid state updates from other classes
-    private val _uiState = MutableStateFlow<UiState>(UiState.Success(Movies()))
+    private val _uiState = MutableStateFlow<UiState>(UiState.Loading)
     // The UI collects from this StateFlow to get its state updates
     val uiState: StateFlow<UiState> = _uiState
 
@@ -36,6 +36,7 @@ class MainViewModel @Inject constructor(
 }
 
 sealed class UiState {
+    object Loading : UiState()
     data class Success(val movies: Movies): UiState()
     data class Error(val exception: Throwable): UiState()
 }
